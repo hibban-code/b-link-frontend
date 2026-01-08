@@ -8,6 +8,18 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useBooks } from '@/lib/hooks/useBooks';
 import Link from 'next/link';
 
+interface Book {
+  id: number;
+  title: string;
+  author: string;
+  category?: string;
+  description?: string;
+  library?: {
+    id: number;
+    name: string;
+  };
+}
+
 export default function BooksPage() {
   const { data, isLoading, error } = useBooks();
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,15 +52,31 @@ export default function BooksPage() {
     );
   }
 
-  // Fix: Handle response structure properly
-  const books = data?.data || [];
+  // Handle all possible response structures
+  let books: Book[] = [];
   
-  console.log('Books API Response:', data);
-  console.log('Books array:', books);
-  console.log('Total books:', books.length);
+  if (data) {
+    // Case 1: data is directly an array
+    if (Array.isArray(data)) {
+      books = data;
+    }
+    // Case 2: data has a 'data' property that's an array
+    else if (typeof data === 'object' && 'data' in data) {
+      const innerData = (data as any).data;
+      
+      // Case 2a: data.data is an array
+      if (Array.isArray(innerData)) {
+        books = innerData;
+      }
+      // Case 2b: data.data has nested data property
+      else if (typeof innerData === 'object' && innerData !== null && 'data' in innerData) {
+        books = Array.isArray(innerData.data) ? innerData.data : [];
+      }
+    }
+  }
 
   // Filter books
-  const filteredBooks = books.filter((book: any) =>
+  const filteredBooks = books.filter((book) =>
     book.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     book.author?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     book.category?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -75,18 +103,10 @@ export default function BooksPage() {
         />
       </div>
 
-      {/* Debug Info */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="mb-4 p-4 bg-yellow-50 rounded-lg text-sm">
-          <p>Total books = {books.length}</p>
-          <p>Filtered = {filteredBooks.length}</p>
-        </div>
-      )}
-
       {/* Books Grid */}
       {filteredBooks.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredBooks.map((book: any) => (
+          {filteredBooks.map((book) => (
             <Card key={book.id} className="hover:shadow-lg transition-shadow">
               <div className="mb-4">
                 <h3 className="text-lg font-semibold mb-2 line-clamp-2">

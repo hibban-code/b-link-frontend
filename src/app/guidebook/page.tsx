@@ -35,6 +35,15 @@ export default function GuidebookPage() {
 
   const libraries = data.data;
 
+  // Helper function to format opening hours
+  const formatOpeningHours = (hours: any): string => {
+    if (typeof hours === 'string') return hours;
+    if (typeof hours === 'object' && hours !== null) {
+      return JSON.stringify(hours);
+    }
+    return 'Tidak tersedia';
+  };
+
   return (
     <Container>
       {/* Header */}
@@ -57,7 +66,7 @@ export default function GuidebookPage() {
 
       {/* Libraries Grid */}
       <div className="space-y-8">
-        {libraries.map((library, index) => (
+        {libraries.map((library: any, index: number) => (
           <Card key={library.id} className="overflow-hidden">
             <div className="md:flex gap-6">
               {/* Number Badge */}
@@ -80,19 +89,11 @@ export default function GuidebookPage() {
                     <p className="text-sm">{library.address}</p>
                   </div>
 
-                  {/* Phone */}
-                  {library.phone && (
-                    <div>
-                      <p className="text-sm text-gray-500 mb-1">📞 Telepon</p>
-                      <p className="text-sm">{library.phone}</p>
-                    </div>
-                  )}
-
                   {/* Hours */}
                   {library.opening_hours && (
                     <div>
                       <p className="text-sm text-gray-500 mb-1">🕒 Jam Buka</p>
-                      <p className="text-sm">{library.opening_hours}</p>
+                      <p className="text-sm">{formatOpeningHours(library.opening_hours)}</p>
                     </div>
                   )}
 
@@ -110,7 +111,7 @@ export default function GuidebookPage() {
                   <div className="mb-4">
                     <p className="text-sm text-gray-500 mb-2">🏢 Fasilitas</p>
                     <div className="flex flex-wrap gap-2">
-                      {library.facilities.map((facility, idx) => (
+                      {library.facilities.map((facility: string, idx: number) => (
                         <span
                           key={idx}
                           className="text-xs bg-primary-50 text-primary-700 px-2 py-1 rounded"
@@ -127,7 +128,7 @@ export default function GuidebookPage() {
                   <div className="mb-4">
                     <p className="text-sm text-gray-500 mb-2">🚌 Transportasi</p>
                     <div className="space-y-1">
-                      {library.public_transport.map((transport, idx) => (
+                      {library.public_transport.map((transport: any, idx: number) => (
                         <p key={idx} className="text-sm">
                           • {transport.type}: {transport.route} - {transport.stop}
                         </p>

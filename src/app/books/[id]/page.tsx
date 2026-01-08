@@ -69,50 +69,50 @@ export default function BookDetailPage({ params }: PageProps) {
 
             {/* Book Info */}
             <div className="mb-6">
-              <h1 className="text-3xl font-bold mb-2">{book.title}</h1>
-              <p className="text-xl text-gray-600 mb-4">oleh {book.author}</p>
+              <h1 className="text-3xl font-bold mb-2">{book.data.title}</h1>
+              <p className="text-xl text-gray-600 mb-4">oleh {book.data.author}</p>
 
-              {book.category && (
+              {book.data.category && (
                 <span className="inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
-                  {book.category}
+                  {book.data.category}
                 </span>
               )}
             </div>
 
             {/* Description */}
-            {book.description && (
+            {book.data.description && (
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-3">📝 Deskripsi</h2>
-                <p className="text-gray-700 leading-relaxed">{book.description}</p>
+                <p className="text-gray-700 leading-relaxed">{book.data.description}</p>
               </div>
             )}
 
             {/* Book Details */}
             <div className="grid grid-cols-2 gap-4 mb-6">
-              {book.isbn && (
+              {book.data.isbn && (
                 <div>
                   <p className="text-sm text-gray-500">ISBN</p>
-                  <p className="font-medium">{book.isbn}</p>
+                  <p className="font-medium">{book.data.isbn}</p>
                 </div>
               )}
-              {book.published_year && (
+              {book.data.published_year && (
                 <div>
                   <p className="text-sm text-gray-500">Tahun Terbit</p>
-                  <p className="font-medium">{book.published_year}</p>
+                  <p className="font-medium">{book.data.published_year}</p>
                 </div>
               )}
             </div>
 
             {/* Library Info */}
-            {book.library && (
+            {book.data.library && (
               <div className="border-t pt-4">
                 <h3 className="text-lg font-semibold mb-3">📍 Lokasi</h3>
-                <Link href={`/libraries/${book.library.id}`}>
+                <Link href={`/libraries/${book.data.library.id}`}>
                   <div className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
-                    <p className="font-medium">{book.library.name}</p>
-                    {book.library.address && (
+                    <p className="font-medium">{book.data .library.name}</p>
+                    {book.data.library.address && (
                       <p className="text-sm text-gray-600 mt-1">
-                        {book.library.address}
+                        {book.data.library.address}
                       </p>
                     )}
                   </div>
@@ -125,8 +125,8 @@ export default function BookDetailPage({ params }: PageProps) {
         {/* Sidebar - AI Recommendations */}
         <div>
           <AIRecommendations 
-            bookTitle={book.title}
-            currentBookId={book.id}
+            bookTitle={book.data.title}
+            currentBookId={book.data.id}
           />
         </div>
       </div>
